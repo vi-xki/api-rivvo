@@ -16,12 +16,13 @@ const users_module_1 = require("./users/users.module");
 const expenses_module_1 = require("./expenses/expenses.module");
 const categories_module_1 = require("./categories/categories.module");
 const auth_module_1 = require("./auth/auth.module");
+const dashboard_module_1 = require("./dashboard/dashboard.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [config_1.ConfigModule.forRoot({ isGlobal: true }), prisma_module_1.PrismaModule, users_module_1.UsersModule, expenses_module_1.ExpensesModule, categories_module_1.CategoriesModule, auth_module_1.AuthModule],
+        imports: [config_1.ConfigModule.forRoot({ isGlobal: true }), prisma_module_1.PrismaModule, users_module_1.UsersModule, expenses_module_1.ExpensesModule, categories_module_1.CategoriesModule, auth_module_1.AuthModule, dashboard_module_1.DashboardModule],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })

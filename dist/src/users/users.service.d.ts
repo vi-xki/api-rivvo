@@ -8,8 +8,8 @@ export declare class UsersService {
         email: string;
         password: string;
         name: string;
-        currency: string;
         id: string;
+        currency: string;
         createdAt: Date;
         updatedAt: Date;
     }>;
@@ -17,8 +17,8 @@ export declare class UsersService {
         email: string;
         password: string;
         name: string;
-        currency: string;
         id: string;
+        currency: string;
         createdAt: Date;
         updatedAt: Date;
     }[]>;
@@ -26,8 +26,8 @@ export declare class UsersService {
         email: string;
         password: string;
         name: string;
-        currency: string;
         id: string;
+        currency: string;
         createdAt: Date;
         updatedAt: Date;
     } | null>;
@@ -35,8 +35,8 @@ export declare class UsersService {
         email: string;
         password: string;
         name: string;
-        currency: string;
         id: string;
+        currency: string;
         createdAt: Date;
         updatedAt: Date;
     } | null>;
@@ -44,8 +44,8 @@ export declare class UsersService {
         email: string;
         password: string;
         name: string;
-        currency: string;
         id: string;
+        currency: string;
         createdAt: Date;
         updatedAt: Date;
     }>;
@@ -53,8 +53,8 @@ export declare class UsersService {
         email: string;
         password: string;
         name: string;
-        currency: string;
         id: string;
+        currency: string;
         createdAt: Date;
         updatedAt: Date;
     }>;

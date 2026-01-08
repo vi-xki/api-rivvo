@@ -14,7 +14,7 @@ export class UsersService {
       data: {
         ...createUserDto,
         password: hashedPassword,
-      } as any,
+      },
     });
   }
 

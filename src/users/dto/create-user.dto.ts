@@ -14,6 +14,6 @@ export class CreateUserDto {
     @IsNotEmpty()
     name: string;
 
-    @IsString()
-    currency?: string;
+    // @IsString()
+    // currency?: string;
 }

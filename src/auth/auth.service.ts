@@ -1,8 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -34,7 +35,16 @@ export class AuthService {
     }
 
     async register(createUserDto: CreateUserDto) {
-        const user = await this.usersService.create(createUserDto);
-        return this.login(user);
+        try {
+            const user = await this.usersService.create(createUserDto);
+            return this.login(user);
+        } catch (err) {
+            console.error('Register error:', err);
+            // handle unique constraint on email
+            if ((err as any)?.code === 'P2002' || err instanceof Prisma.PrismaClientKnownRequestError && (err as any).code === 'P2002') {
+                throw new ConflictException('Email already in use');
+            }
+            throw err;
+        }
     }
 }

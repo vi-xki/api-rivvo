@@ -7,23 +7,23 @@ datasource db {
 }
 
 model budget {
-  id          String   @id
+  id          String   @id @default(uuid())
   limitAmount Float
   month       String
   userId      String   @unique(map: "Budget_userId_key")
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
   user        user     @relation(fields: [userId], references: [id], map: "Budget_userId_fkey")
 }
 
 model category {
-  id               String             @id
+  id               String             @id @default(uuid())
   name             String
   icon             String
   color            String
   userId           String
   createdAt        DateTime           @default(now())
-  updatedAt        DateTime
+  updatedAt        DateTime @updatedAt
   user             user               @relation(fields: [userId], references: [id], map: "Category_userId_fkey")
   expense          expense[]
   recurringexpense recurringexpense[]
@@ -32,14 +32,14 @@ model category {
 }
 
 model expense {
-  id         String   @id
+  id         String   @id @default(uuid())
   amount     Float
   note       String?
   date       DateTime @default(now())
   categoryId String
   userId     String
   createdAt  DateTime @default(now())
-  updatedAt  DateTime
+  updatedAt  DateTime @updatedAt
   category   category @relation(fields: [categoryId], references: [id], map: "Expense_categoryId_fkey")
   user       user     @relation(fields: [userId], references: [id], map: "Expense_userId_fkey")
 
@@ -48,14 +48,14 @@ model expense {
 }
 
 model recurringexpense {
-  id         String   @id
+  id         String   @id @default(uuid())
   amount     Float
   note       String?
   dayOfMonth Int
   categoryId String
   userId     String
   createdAt  DateTime @default(now())
-  updatedAt  DateTime
+  updatedAt  DateTime @updatedAt
   category   category @relation(fields: [categoryId], references: [id], map: "RecurringExpense_categoryId_fkey")
   user       user     @relation(fields: [userId], references: [id], map: "RecurringExpense_userId_fkey")
 
@@ -64,13 +64,13 @@ model recurringexpense {
 }
 
 model user {
-  id               String             @id
+  id               String             @id @default(uuid())
   email            String             @unique(map: "User_email_key")
   password         String
   name             String
   currency         String             @default("USD")
   createdAt        DateTime           @default(now())
-  updatedAt        DateTime
+  updatedAt        DateTime @updatedAt
   budget           budget?
   category         category[]
   expense          expense[]

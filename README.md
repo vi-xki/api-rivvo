@@ -31,6 +31,50 @@
 $ npm install
 ```
 
+### Local MySQL & Prisma
+
+1. Copy the example env and update credentials:
+
+```bash
+$ cp .env.example .env
+# edit .env to set DATABASE_URL for your local MySQL
+```
+
+2. Ensure a local MySQL server is running and the database exists (example):
+
+```bash
+$ mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS rivvo;"
+```
+
+3. Apply Prisma migrations and generate client:
+
+```bash
+$ npx prisma migrate dev --name init
+$ npx prisma generate
+```
+
+4. Start the server in dev mode:
+
+```bash
+$ npm run start:dev
+```
+
+5. Create a test user (recommended for local testing):
+
+```bash
+# Signup creates the user and hashes the password
+$ curl -X POST http://localhost:3000/auth/signup \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"Dev","email":"dev@example.com","password":"password"}'
+
+# Login to receive a token
+$ curl -X POST http://localhost:3000/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"dev@example.com","password":"password"}'
+```
+
+(If you prefer pnpm: use `pnpm install` / `pnpm run start:dev`.)
+
 ## Compile and run the project
 
 ```bash
