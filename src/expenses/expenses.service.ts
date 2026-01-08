@@ -12,7 +12,7 @@ export class ExpensesService {
       data: {
         ...createExpenseDto,
         userId,
-      },
+      } as any,
       include: { category: true },
     });
   }

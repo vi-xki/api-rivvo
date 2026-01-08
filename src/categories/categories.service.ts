@@ -12,7 +12,7 @@ export class CategoriesService {
       data: {
         ...createCategoryDto,
         userId,
-      },
+      } as any,
     });
   }
 
