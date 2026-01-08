@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  currency  String   @default("USD")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  expenses         Expense[]
+  categories       Category[]
+  recurringExpenses RecurringExpense[]
+  budget           Budget?
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String
+  icon      String
+  color     String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  expenses  Expense[]
+  recurring RecurringExpense[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, name])
+}
+
+model Expense {
+  id         String   @id @default(uuid())
+  amount     Float
+  note       String?
+  date       DateTime @default(now())
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model RecurringExpense {
+  id         String   @id @default(uuid())
+  amount     Float
+  note       String?
+  dayOfMonth Int
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Budget {
+  id          String   @id @default(uuid())
+  limitAmount Float
+  month       String   // Format: YYYY-MM
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
