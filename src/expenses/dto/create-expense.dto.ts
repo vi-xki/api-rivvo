@@ -1,4 +1,6 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString, IsDateString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, IsDateString, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { RecurringDto } from './recurring.dto';
 
 export class CreateExpenseDto {
     @IsNumber()
@@ -16,4 +18,9 @@ export class CreateExpenseDto {
     @IsString()
     @IsNotEmpty()
     categoryId: string;
+
+    @ValidateNested()
+    @Type(() => RecurringDto)
+    @IsOptional()
+    recurring?: RecurringDto;
 }

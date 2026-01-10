@@ -13,12 +13,13 @@ const expenses_service_1 = require("./expenses.service");
 const expenses_controller_1 = require("./expenses.controller");
 const expense_entity_1 = require("./entities/expense.entity");
 const category_entity_1 = require("../categories/entities/category.entity");
+const recurringexpense_entity_1 = require("../recurringexpenses/entities/recurringexpense.entity");
 let ExpensesModule = class ExpensesModule {
 };
 exports.ExpensesModule = ExpensesModule;
 exports.ExpensesModule = ExpensesModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([expense_entity_1.Expense, category_entity_1.Category])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([expense_entity_1.Expense, category_entity_1.Category, recurringexpense_entity_1.Recurringexpense])],
         controllers: [expenses_controller_1.ExpensesController],
         providers: [expenses_service_1.ExpensesService],
     })
