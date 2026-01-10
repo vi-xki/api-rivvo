@@ -1,43 +1,33 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { Category } from './entities/category.entity';
 
 @Injectable()
 export class CategoriesService {
-  constructor(private prisma: PrismaService) { }
+  constructor(@InjectRepository(Category) private repo: Repository<Category>) {}
 
   create(createCategoryDto: CreateCategoryDto, userId: string) {
-    return this.prisma.category.create({
-      data: {
-        ...createCategoryDto,
-        userId,
-      },
-    });
+    const c = this.repo.create({ ...createCategoryDto, userId });
+    return this.repo.save(c);
   }
 
   findAll(userId: string) {
-    return this.prisma.category.findMany({
-      where: { userId },
-    });
+    return this.repo.find({ where: { userId } });
   }
 
   findOne(id: string) {
-    return this.prisma.category.findUnique({
-      where: { id },
-    });
+    return this.repo.findOne({ where: { id } });
   }
 
-  update(id: string, updateCategoryDto: UpdateCategoryDto) {
-    return this.prisma.category.update({
-      where: { id },
-      data: updateCategoryDto,
-    });
+  async update(id: string, updateCategoryDto: UpdateCategoryDto) {
+    await this.repo.update(id, updateCategoryDto as any);
+    return this.findOne(id);
   }
 
   remove(id: string) {
-    return this.prisma.category.delete({
-      where: { id },
-    });
+    return this.repo.delete(id);
   }
 }

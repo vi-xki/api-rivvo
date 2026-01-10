@@ -1,61 +1,14 @@
-import { PrismaService } from '../prisma/prisma.service';
+import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
 export declare class UsersService {
-    private prisma;
-    constructor(prisma: PrismaService);
-    create(createUserDto: CreateUserDto): Promise<{
-        email: string;
-        password: string;
-        name: string;
-        id: string;
-        currency: string;
-        createdAt: Date;
-        updatedAt: Date;
-    }>;
-    findAll(): Promise<{
-        email: string;
-        password: string;
-        name: string;
-        id: string;
-        currency: string;
-        createdAt: Date;
-        updatedAt: Date;
-    }[]>;
-    findOne(id: string): Promise<{
-        email: string;
-        password: string;
-        name: string;
-        id: string;
-        currency: string;
-        createdAt: Date;
-        updatedAt: Date;
-    } | null>;
-    findByEmail(email: string): Promise<{
-        email: string;
-        password: string;
-        name: string;
-        id: string;
-        currency: string;
-        createdAt: Date;
-        updatedAt: Date;
-    } | null>;
-    update(id: string, updateUserDto: UpdateUserDto): Promise<{
-        email: string;
-        password: string;
-        name: string;
-        id: string;
-        currency: string;
-        createdAt: Date;
-        updatedAt: Date;
-    }>;
-    remove(id: string): Promise<{
-        email: string;
-        password: string;
-        name: string;
-        id: string;
-        currency: string;
-        createdAt: Date;
-        updatedAt: Date;
-    }>;
+    private repo;
+    constructor(repo: Repository<User>);
+    create(createUserDto: CreateUserDto): Promise<User>;
+    findAll(): Promise<User[]>;
+    findOne(id: string): Promise<User | null>;
+    findByEmail(email: string): Promise<User | null>;
+    update(id: string, updateUserDto: UpdateUserDto): Promise<User | null>;
+    remove(id: string): Promise<import("typeorm").DeleteResult>;
 }

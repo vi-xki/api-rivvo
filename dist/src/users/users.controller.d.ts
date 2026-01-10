@@ -4,49 +4,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export declare class UsersController {
     private readonly usersService;
     constructor(usersService: UsersService);
-    create(createUserDto: CreateUserDto): Promise<{
-        email: string;
-        password: string;
-        name: string;
-        id: string;
-        currency: string;
-        createdAt: Date;
-        updatedAt: Date;
-    }>;
-    findAll(): Promise<{
-        email: string;
-        password: string;
-        name: string;
-        id: string;
-        currency: string;
-        createdAt: Date;
-        updatedAt: Date;
-    }[]>;
-    findOne(id: string): Promise<{
-        email: string;
-        password: string;
-        name: string;
-        id: string;
-        currency: string;
-        createdAt: Date;
-        updatedAt: Date;
-    } | null>;
-    update(id: string, updateUserDto: UpdateUserDto): Promise<{
-        email: string;
-        password: string;
-        name: string;
-        id: string;
-        currency: string;
-        createdAt: Date;
-        updatedAt: Date;
-    }>;
-    remove(id: string): Promise<{
-        email: string;
-        password: string;
-        name: string;
-        id: string;
-        currency: string;
-        createdAt: Date;
-        updatedAt: Date;
-    }>;
+    create(createUserDto: CreateUserDto): Promise<import("./entities/user.entity").User>;
+    findAll(): Promise<import("./entities/user.entity").User[]>;
+    findOne(id: string): Promise<import("./entities/user.entity").User | null>;
+    update(id: string, updateUserDto: UpdateUserDto): Promise<import("./entities/user.entity").User | null>;
+    remove(id: string): Promise<import("typeorm").DeleteResult>;
 }

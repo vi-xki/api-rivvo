@@ -8,15 +8,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DashboardModule = void 0;
 const common_1 = require("@nestjs/common");
+const typeorm_1 = require("@nestjs/typeorm");
 const dashboard_service_1 = require("./dashboard.service");
 const dashboard_controller_1 = require("./dashboard.controller");
-const prisma_module_1 = require("../prisma/prisma.module");
+const expense_entity_1 = require("../expenses/entities/expense.entity");
+const budget_entity_1 = require("../budgets/entities/budget.entity");
+const category_entity_1 = require("../categories/entities/category.entity");
 let DashboardModule = class DashboardModule {
 };
 exports.DashboardModule = DashboardModule;
 exports.DashboardModule = DashboardModule = __decorate([
     (0, common_1.Module)({
-        imports: [prisma_module_1.PrismaModule],
+        imports: [typeorm_1.TypeOrmModule.forFeature([expense_entity_1.Expense, budget_entity_1.Budget, category_entity_1.Category])],
         providers: [dashboard_service_1.DashboardService],
         controllers: [dashboard_controller_1.DashboardController],
     })

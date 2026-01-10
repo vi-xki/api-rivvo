@@ -1,97 +1,13 @@
-import { PrismaService } from '../prisma/prisma.service';
+import { Repository } from 'typeorm';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
+import { Expense } from './entities/expense.entity';
 export declare class ExpensesService {
-    private prisma;
-    constructor(prisma: PrismaService);
-    create(createExpenseDto: CreateExpenseDto, userId: string): import("@prisma/client").Prisma.Prisma__expenseClient<{
-        category: {
-            name: string;
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            userId: string;
-            icon: string;
-            color: string;
-        };
-    } & {
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        amount: number;
-        note: string | null;
-        date: Date;
-        categoryId: string;
-        userId: string;
-    }, never, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
-    findAll(userId: string): import("@prisma/client").Prisma.PrismaPromise<({
-        category: {
-            name: string;
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            userId: string;
-            icon: string;
-            color: string;
-        };
-    } & {
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        amount: number;
-        note: string | null;
-        date: Date;
-        categoryId: string;
-        userId: string;
-    })[]>;
-    findOne(id: string): import("@prisma/client").Prisma.Prisma__expenseClient<({
-        category: {
-            name: string;
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            userId: string;
-            icon: string;
-            color: string;
-        };
-    } & {
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        amount: number;
-        note: string | null;
-        date: Date;
-        categoryId: string;
-        userId: string;
-    }) | null, null, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
-    update(id: string, updateExpenseDto: UpdateExpenseDto): import("@prisma/client").Prisma.Prisma__expenseClient<{
-        category: {
-            name: string;
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            userId: string;
-            icon: string;
-            color: string;
-        };
-    } & {
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        amount: number;
-        note: string | null;
-        date: Date;
-        categoryId: string;
-        userId: string;
-    }, never, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
-    remove(id: string): import("@prisma/client").Prisma.Prisma__expenseClient<{
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        amount: number;
-        note: string | null;
-        date: Date;
-        categoryId: string;
-        userId: string;
-    }, never, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
+    private repo;
+    constructor(repo: Repository<Expense>);
+    create(createExpenseDto: CreateExpenseDto, userId: string): Promise<Expense | null>;
+    findAll(userId: string): Promise<Expense[]>;
+    findOne(id: string): Promise<Expense | null>;
+    update(id: string, updateExpenseDto: UpdateExpenseDto): Promise<Expense | null>;
+    remove(id: string): Promise<import("typeorm").DeleteResult>;
 }

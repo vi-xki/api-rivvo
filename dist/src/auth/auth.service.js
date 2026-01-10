@@ -47,7 +47,6 @@ const common_1 = require("@nestjs/common");
 const users_service_1 = require("../users/users.service");
 const jwt_1 = require("@nestjs/jwt");
 const bcrypt = __importStar(require("bcrypt"));
-const client_1 = require("@prisma/client");
 let AuthService = class AuthService {
     usersService;
     jwtService;
@@ -82,7 +81,7 @@ let AuthService = class AuthService {
         }
         catch (err) {
             console.error('Register error:', err);
-            if (err?.code === 'P2002' || err instanceof client_1.Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+            if (err?.code === 'SQLITE_CONSTRAINT' || err?.message?.includes('UNIQUE')) {
                 throw new common_1.ConflictException('Email already in use');
             }
             throw err;

@@ -31,47 +31,40 @@
 $ npm install
 ```
 
-### Local MySQL & Prisma
+### Local SQLite (TypeORM + sql.js)
 
-1. Copy the example env and update credentials:
+This project now uses **TypeORM** with **sql.js** (pure JavaScript SQLite) for an easy zero-config local development experience. No native compilation needed!
+
+**Quick start:**
 
 ```bash
-$ cp .env.example .env
-# edit .env to set DATABASE_URL for your local MySQL
+$ pnpm install
+$ pnpm run start:dev
 ```
 
-2. Ensure a local MySQL server is running and the database exists (example):
+The app will start on `http://localhost:3000` with an in-memory SQLite database (data is cleared on restart). All tables are created automatically via TypeORM synchronization.
+
+**Test the API:**
 
 ```bash
-$ mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS rivvo;"
-```
-
-3. Apply Prisma migrations and generate client:
-
-```bash
-$ npx prisma migrate dev --name init
-$ npx prisma generate
-```
-
-4. Start the server in dev mode:
-
-```bash
-$ npm run start:dev
-```
-
-5. Create a test user (recommended for local testing):
-
-```bash
-# Signup creates the user and hashes the password
+# Signup creates a user and hashes the password
 $ curl -X POST http://localhost:3000/auth/signup \
   -H 'Content-Type: application/json' \
   -d '{"name":"Dev","email":"dev@example.com","password":"password"}'
 
-# Login to receive a token
+# Login to receive a JWT token
 $ curl -X POST http://localhost:3000/auth/login \
   -H 'Content-Type: application/json' \
   -d '{"email":"dev@example.com","password":"password"}'
 ```
+
+**Database** (sql.js in-memory):
+- No installation required; runs entirely in Node.js memory
+- Perfect for development and testing
+- Data persists for the lifetime of the server process
+
+**Note on Prisma:**
+Prisma has been completely removed and replaced with TypeORM repositories. The original Prisma SQL migration is kept in `prisma/migrations/.../migration.sql` for reference only.
 
 (If you prefer pnpm: use `pnpm install` / `pnpm run start:dev`.)
 

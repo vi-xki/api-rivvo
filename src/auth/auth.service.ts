@@ -3,7 +3,6 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from '../users/dto/create-user.dto';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -40,8 +39,8 @@ export class AuthService {
             return this.login(user);
         } catch (err) {
             console.error('Register error:', err);
-            // handle unique constraint on email
-            if ((err as any)?.code === 'P2002' || err instanceof Prisma.PrismaClientKnownRequestError && (err as any).code === 'P2002') {
+            // handle unique constraint on email (SQLite / TypeORM)
+            if ((err as any)?.code === 'SQLITE_CONSTRAINT' || (err as any)?.message?.includes('UNIQUE')) {
                 throw new ConflictException('Email already in use');
             }
             throw err;

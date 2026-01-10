@@ -8,53 +8,43 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ExpensesService = void 0;
 const common_1 = require("@nestjs/common");
-const prisma_service_1 = require("../prisma/prisma.service");
+const typeorm_1 = require("@nestjs/typeorm");
+const typeorm_2 = require("typeorm");
+const expense_entity_1 = require("./entities/expense.entity");
 let ExpensesService = class ExpensesService {
-    prisma;
-    constructor(prisma) {
-        this.prisma = prisma;
+    repo;
+    constructor(repo) {
+        this.repo = repo;
     }
-    create(createExpenseDto, userId) {
-        return this.prisma.expense.create({
-            data: {
-                ...createExpenseDto,
-                userId,
-            },
-            include: { category: true },
-        });
+    async create(createExpenseDto, userId) {
+        const exp = this.repo.create({ ...createExpenseDto, userId });
+        const saved = await this.repo.save(exp);
+        return this.repo.findOne({ where: { id: saved.id }, relations: ['category'] });
     }
     findAll(userId) {
-        return this.prisma.expense.findMany({
-            where: { userId },
-            include: { category: true },
-            orderBy: { date: 'desc' },
-        });
+        return this.repo.find({ where: { userId }, relations: ['category'], order: { date: 'DESC' } });
     }
     findOne(id) {
-        return this.prisma.expense.findUnique({
-            where: { id },
-            include: { category: true },
-        });
+        return this.repo.findOne({ where: { id }, relations: ['category'] });
     }
-    update(id, updateExpenseDto) {
-        return this.prisma.expense.update({
-            where: { id },
-            data: updateExpenseDto,
-            include: { category: true },
-        });
+    async update(id, updateExpenseDto) {
+        await this.repo.update(id, updateExpenseDto);
+        return this.findOne(id);
     }
     remove(id) {
-        return this.prisma.expense.delete({
-            where: { id },
-        });
+        return this.repo.delete(id);
     }
 };
 exports.ExpensesService = ExpensesService;
 exports.ExpensesService = ExpensesService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __param(0, (0, typeorm_1.InjectRepository)(expense_entity_1.Expense)),
+    __metadata("design:paramtypes", [typeorm_2.Repository])
 ], ExpensesService);
 //# sourceMappingURL=expenses.service.js.map

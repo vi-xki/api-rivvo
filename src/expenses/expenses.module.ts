@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ExpensesService } from './expenses.service';
 import { ExpensesController } from './expenses.controller';
-import { PrismaModule } from '../prisma/prisma.module';
+import { Expense } from './entities/expense.entity';
+import { Category } from '../categories/entities/category.entity';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [TypeOrmModule.forFeature([Expense, Category])],
   controllers: [ExpensesController],
   providers: [ExpensesService],
 })
-export class ExpensesModule { }
+export class ExpensesModule {}

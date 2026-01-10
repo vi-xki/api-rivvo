@@ -1,52 +1,13 @@
-import { PrismaService } from '../prisma/prisma.service';
+import { Repository } from 'typeorm';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { Category } from './entities/category.entity';
 export declare class CategoriesService {
-    private prisma;
-    constructor(prisma: PrismaService);
-    create(createCategoryDto: CreateCategoryDto, userId: string): import("@prisma/client").Prisma.Prisma__categoryClient<{
-        name: string;
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        userId: string;
-        icon: string;
-        color: string;
-    }, never, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
-    findAll(userId: string): import("@prisma/client").Prisma.PrismaPromise<{
-        name: string;
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        userId: string;
-        icon: string;
-        color: string;
-    }[]>;
-    findOne(id: string): import("@prisma/client").Prisma.Prisma__categoryClient<{
-        name: string;
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        userId: string;
-        icon: string;
-        color: string;
-    } | null, null, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
-    update(id: string, updateCategoryDto: UpdateCategoryDto): import("@prisma/client").Prisma.Prisma__categoryClient<{
-        name: string;
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        userId: string;
-        icon: string;
-        color: string;
-    }, never, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
-    remove(id: string): import("@prisma/client").Prisma.Prisma__categoryClient<{
-        name: string;
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        userId: string;
-        icon: string;
-        color: string;
-    }, never, import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
+    private repo;
+    constructor(repo: Repository<Category>);
+    create(createCategoryDto: CreateCategoryDto, userId: string): Promise<Category>;
+    findAll(userId: string): Promise<Category[]>;
+    findOne(id: string): Promise<Category | null>;
+    update(id: string, updateCategoryDto: UpdateCategoryDto): Promise<Category | null>;
+    remove(id: string): Promise<import("typeorm").DeleteResult>;
 }

@@ -8,48 +8,42 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CategoriesService = void 0;
 const common_1 = require("@nestjs/common");
-const prisma_service_1 = require("../prisma/prisma.service");
+const typeorm_1 = require("@nestjs/typeorm");
+const typeorm_2 = require("typeorm");
+const category_entity_1 = require("./entities/category.entity");
 let CategoriesService = class CategoriesService {
-    prisma;
-    constructor(prisma) {
-        this.prisma = prisma;
+    repo;
+    constructor(repo) {
+        this.repo = repo;
     }
     create(createCategoryDto, userId) {
-        return this.prisma.category.create({
-            data: {
-                ...createCategoryDto,
-                userId,
-            },
-        });
+        const c = this.repo.create({ ...createCategoryDto, userId });
+        return this.repo.save(c);
     }
     findAll(userId) {
-        return this.prisma.category.findMany({
-            where: { userId },
-        });
+        return this.repo.find({ where: { userId } });
     }
     findOne(id) {
-        return this.prisma.category.findUnique({
-            where: { id },
-        });
+        return this.repo.findOne({ where: { id } });
     }
-    update(id, updateCategoryDto) {
-        return this.prisma.category.update({
-            where: { id },
-            data: updateCategoryDto,
-        });
+    async update(id, updateCategoryDto) {
+        await this.repo.update(id, updateCategoryDto);
+        return this.findOne(id);
     }
     remove(id) {
-        return this.prisma.category.delete({
-            where: { id },
-        });
+        return this.repo.delete(id);
     }
 };
 exports.CategoriesService = CategoriesService;
 exports.CategoriesService = CategoriesService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __param(0, (0, typeorm_1.InjectRepository)(category_entity_1.Category)),
+    __metadata("design:paramtypes", [typeorm_2.Repository])
 ], CategoriesService);
 //# sourceMappingURL=categories.service.js.map

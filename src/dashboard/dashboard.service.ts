@@ -1,9 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Expense } from '../expenses/entities/expense.entity';
+import { Budget } from '../budgets/entities/budget.entity';
+import { Category } from '../categories/entities/category.entity';
 
 @Injectable()
 export class DashboardService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @InjectRepository(Expense) private expenseRepo: Repository<Expense>,
+    @InjectRepository(Budget) private budgetRepo: Repository<Budget>,
+    @InjectRepository(Category) private categoryRepo: Repository<Category>,
+  ) {}
 
   private monthRange(date = new Date()) {
     const year = date.getFullYear();
@@ -17,21 +25,18 @@ export class DashboardService {
     const { start, end } = this.monthRange();
 
     // total spent this month
-    const totalRes = await this.prisma.expense.aggregate({
-      where: {
-        userId,
-        date: { gte: start, lt: end },
-      },
-      _sum: { amount: true },
-    });
+    const totalRes = await this.expenseRepo
+      .createQueryBuilder('expense')
+      .select('SUM(expense.amount)', 'sum')
+      .where('expense.userId = :userId', { userId })
+      .andWhere('expense.date >= :start AND expense.date < :end', { start: start.toISOString(), end: end.toISOString() })
+      .getRawOne();
 
-    const totalSpent = totalRes._sum.amount ?? 0;
+    const totalSpent = parseFloat(totalRes?.sum ?? '0');
 
     // budget for this month (month stored as YYYY-MM)
     const monthString = `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, '0')}`;
-    const budget = await this.prisma.budget.findUnique({
-      where: { userId: userId },
-    });
+    const budget = await this.budgetRepo.findOne({ where: { userId } });
 
     const limitAmount = budget?.limitAmount ?? 0;
     const remaining = limitAmount - totalSpent;
@@ -41,23 +46,23 @@ export class DashboardService {
     const dailyAverage = dayOfMonth > 0 ? totalSpent / dayOfMonth : 0;
 
     // top category this month
-    const groups = await this.prisma.expense.groupBy({
-      by: ['categoryId'],
-      where: {
-        userId,
-        date: { gte: start, lt: end },
-      },
-      _sum: { amount: true },
-      orderBy: { _sum: { amount: 'desc' } },
-      take: 1,
-    });
+    const groups = await this.expenseRepo
+      .createQueryBuilder('expense')
+      .select('expense.categoryId', 'categoryId')
+      .addSelect('SUM(expense.amount)', 'amount')
+      .where('expense.userId = :userId', { userId })
+      .andWhere('expense.date >= :start AND expense.date < :end', { start: start.toISOString(), end: end.toISOString() })
+      .groupBy('expense.categoryId')
+      .orderBy('amount', 'DESC')
+      .limit(1)
+      .getRawMany();
 
     let topCategory: { id: string; name: string; amount: number } | null = null;
     if (groups.length) {
       const grp = groups[0];
-      const category = await this.prisma.category.findUnique({ where: { id: grp.categoryId } });
+      const category = await this.categoryRepo.findOne({ where: { id: grp.categoryId } });
       if (category) {
-        topCategory = { id: category.id, name: category.name, amount: grp._sum.amount ?? 0 };
+        topCategory = { id: category.id, name: category.name, amount: parseFloat(grp.amount ?? '0') };
       }
     }
 
